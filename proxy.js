@@ -23,7 +23,7 @@ const preview = new URLPattern({
 // preview: 512px
 // thumbnail_big: 256px
 // Notice: original and custom seems not to work]
-const albums = new URLPattern({ pathname: "/albums?/:id" });
+const albums = new URLPattern({ pathname: "/album{s}?/:id" });
 const patterns = [albums, preview];
 
 const mediebankURL = (url) => {
