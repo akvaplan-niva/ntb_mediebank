@@ -1,7 +1,6 @@
 # ntb_mediebank
 
-Deno module for
-[NTB Mediebank v1 API](https://mediebank.readme.io/reference/how-to-use-the-api)
+Deno module for [NTB Mediebank API](https://api.ntb.no/portal/docs/media) (v1)
 
 ## Proxy
 

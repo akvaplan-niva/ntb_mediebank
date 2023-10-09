@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "proxy": "deno run --watch --unstable --allow-env=ntb_mediebank_secret --allow-net=:9000,mediebank.ntb.no proxy.js"
+    "proxy": "deno run --watch --unstable --allow-env=ntb_mediebank_secret --allow-net=:8000,mediebank.ntb.no proxy.ts"
   }
 }
