@@ -62,12 +62,6 @@ export const proxy = async (request: Request) => {
 
     const url = mediebankURL(request.url);
 
-    if (!url.pathname.startsWith(baseURL.pathname)) {
-      return Response.json({
-        error: `Invalid URL, pathname must start with: ${baseURL.pathname}`,
-      }, { status: 400 });
-    }
-
     const headers = new Headers(request.headers);
     headers.append("x-api-secret", ntb_mediebank_secret as string);
     headers.append("accept", "application/json,image/*,text/*");
