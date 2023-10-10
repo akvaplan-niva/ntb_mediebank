@@ -1,6 +1,6 @@
-// Deno proxy server for NTB mediebank API v1
+// Deno proxy server for [NTB Mediebank API v1](https://api.ntb.no/portal/docs/media)
 //
-// Examples:
+// Pre v1 examples:
 // http://localhost:8000/preview/385801 alias for http://localhost:8000/api/v1/apps/asset/preview/preview/385801
 // http://localhost:8000/albums/527 – alias for http://localhost:8000/api/v1/apps/assets?query&albums[]=527
 
@@ -49,10 +49,10 @@ const mediebankURL = (url: URL | string) => {
   return url;
 };
 
-const corsHeaders = new Headers([
-  ["access-control-allow-origin", "*"],
-  ["access-control-allow-methods", "GET, OPTIONS"],
-]);
+const corsHeaders = new Headers({
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, OPTIONS",
+});
 
 export const proxy = async (request: Request) => {
   try {
@@ -62,31 +62,25 @@ export const proxy = async (request: Request) => {
 
     const url = mediebankURL(request.url);
 
-    if (!url.pathname.startsWith(baseURL.pathname)) {
-      return Response.json({
-        error: `Invalid URL, pathname must start with: ${baseURL.pathname}`,
-      }, { status: 400 });
-    }
-
     const headers = new Headers(request.headers);
     headers.append("x-api-secret", ntb_mediebank_secret as string);
     headers.append("accept", "application/json,image/*,text/*");
 
-    // Uncomment/refactor to become a real proxy, for now only GET
+    // Uncomment&refactor to become a real proxy, for now only GET
     // const { body, method } = request;
     const body = undefined;
     const method = "GET";
 
-    const aborter = new AbortController();
-    const { signal } = aborter;
-    const timeout = setTimeout(() => aborter.abort(), 15000);
-
-    const response = await fetch(url.href, { headers, method, body, signal });
+    const response = await fetch(url.href, {
+      headers,
+      method,
+      body,
+      signal: AbortSignal.timeout(15000),
+    });
 
     // Add CORS to response headers
     // @todo Serve unmodified response on anything but JSON?
     const responseHeaders = new Headers([...response.headers, ...corsHeaders]);
-    clearTimeout(timeout);
 
     return new Response(response.body, { headers: responseHeaders });
   } catch (e) {
